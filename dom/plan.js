@@ -10,11 +10,11 @@ export class Plan{
         this.coberturasPractica = coberturasPractica;
     }
 
-    obtenerCobertura(especialidad){
-        return especialidad.NivelCobertura
-    } // devuelve NivelCobertura
-
-    obtenerCobertura(practica){
-        return practica.NivelCobertura
-    }// devuelve NivelCobertura
+    obtenerCobertura(entidad){
+        const cobertura =
+            this.coberturasEspecialidad.find(c => c.especialidad.nombre === entidad.nombre) ||
+            this.coberturasPractica.find(c => c.practica.nombre === entidad.nombre);
+        
+        return cobertura ? cobertura.nivel : 3;
+    }
 }
