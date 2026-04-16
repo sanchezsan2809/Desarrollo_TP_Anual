@@ -7,7 +7,8 @@ import { horaAMinutos } from "../fecha";
 
 export class Agenda{
 
-
+    //generarTurnosPara(Oftamologia,medico)
+    //generarTurnoPara(ecografia,medico)
     generarTurnosPara(especialidad, medico){     
         turnos = [] 
 
