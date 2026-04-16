@@ -4,6 +4,7 @@ import { Sede } from "./sede"
 import { Practica } from "./practica"
 import { EstadoTurno } from "./estadoTurno"
 import { CambioEstadoTurno } from "./cambioEstadoTurno";
+import { FactoryNotificacion } from "./factoryNotificacion";
 
 export class Turno {
     static numeroTurno = 0
@@ -27,6 +28,8 @@ export class Turno {
         , motivo) 
         
         this.historialEstados.push(cambioEstado)
+
+        FactoryNotificacion.crearSegunEstadoTurno(this)
     }
 
     asignarPaciente(paciente){
@@ -41,17 +44,13 @@ export class Turno {
         numeroTurno = this.numeroTurno + 1
         return this.numeroTurno
     }
-
-    ultimoEstado(){
-        return this.historialEstados.at(this.historialEstados.length -1)
-    }
     
-    remitente(){
+    remitenteUltimoCambioEstado(){
         ultimoCambioDeEstado = this.ultimoEstado()
         return ultimoCambioDeEstado.usuario
     }
 
-    destinatario(){
+    destinatarioUltimoCambioEstado(){
         destinatario = this.paciente
         if (this.remitente() === this.paciente){
             destinatario = this.medico

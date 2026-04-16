@@ -1,15 +1,19 @@
 import { Usuario } from "./usuario";
 
 export class Notificacion{
-    constructor(id, destinatario, remitente, mensaje, fechaHoraCreacion, fechaHoraLeida, leida){
+    
+    
+    constructor(id, destinatario, remitente, mensaje){
         this.id = id;
         this.destinatario = destinatario;
         this.remitente = remitente;
         this.mensaje = mensaje;
-        this.fechaHoraCreacion = fechaHoraCreacion;
-        this.fechaHoraLeida = fechaHoraLeida;
-        this.leida = leida;
+        this.fechaHoraCreacion = new Date();
+        this.fechaHoraLeida = null;
+        this.leida = false;
     }
+
+    
 
     marcarComoLeida(){
         this.leida=true;
