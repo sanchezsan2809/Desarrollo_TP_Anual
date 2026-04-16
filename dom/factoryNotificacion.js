@@ -1,29 +1,58 @@
 import { Notificacion } from "./notificacion";
 import { Turno } from "./turno";
 
+
 export class FactoryNotificacion {
+    
+    static estrategias = {
+        // RESERVADO (ID: 2)
+        2: (turno) => new Notificacion(
+            turno.id,
+            turno.medico.usuario, 
+            turno.paciente.usuario, 
+            `El paciente ${turno.paciente.nombre} reservó un turno para ${turno.practica}`
+        ),
 
-    crearSegunEstadoTurno(turno) {
-        let horaCreacion = new Date();
-        let horaLeida = 0;
+        // CONFIRMADO (ID: 3)
+        3: (turno) => 
+            new Notificacion(
+            turno.id,
+            turno.paciente.usuario, 
+            turno.medico.usuario, 
+            `Su turno con el Dr/a.  ${turno.medico.nombre}  ha sido confirmado.`
+        ),
 
-        if (turno.ultimoEstado() !== "DISPONIBLE" | turno.ultimoEstado() !== "REALIZADO") {
+        // CANCELADO (ID: 4)
+        4: (turno) => {
             return new Notificacion(
                 turno.id,
-                turno.destinatario(),
-                turno.remitente(),
-                "El turno para " + turno.practica + " fue " + turno.ultimoEstado(),
-                horaCreacion,
-                horaLeida,
-                false);
-
+                turno.destinatarioUltimoCambioEstado(), 
+                turno.remitenteUltimoCambioEstado(), 
+                "El turno ha sido cancelado por la contraparte."
+            );
         }
+
+
     }
+    
+    crearSegunEstadoTurno(turno) {   
+        const estrategia = this.estrategias[turno.estado];
+        if(!estrategia){
+            throw new Error("No hay cambios en el turno para notificar");
+        }
 
-    crearRecordatorio(turno){
-        const fechaDeHoy = new Date();
+        return estrategia(turno)
+    }
+    
+    
+    crearRecordatorio(turno) {
+        const mensajeBase = `Recordatorio: Mañana tiene un turno agendado a las ${turno.fechaHora.toLocaleTimeString()}`;
 
-        if ()
+        return [
+            new Notificacion(turno.id,turno.paciente.usuario, "SISTEMA", mensajeBase),
+            new Notificacion(turno.id,turno.medico.usuario, "SISTEMA", mensajeBase)
+        ];
     }
     
 }
+
