@@ -9,13 +9,14 @@ import { FactoryNotificacion } from "./factoryNotificacion";
 export class Turno {
     static numeroTurno = 0
 
-    constructor(medico, fechaHora, sede, estado) {
+    constructor(medico, fechaHora, sede, estado, costo) {
         this.id = Turno.generarId()
         this.medico = medico, 
         this.fechaHora = fechaHora,
         this.sede = sede, 
         this.estado = estado,
-        this.historialEstados = []
+        this.historialEstados = [],
+        costo = costo
     }
 
     actualizarEstado(nuevoEstado, quien, motivo){
@@ -38,6 +39,10 @@ export class Turno {
 
     asignarPractica(practica){
         this.practica = practica
+    }
+
+    asignarEspecialidad(especialidad){
+        this.especialidad = especialidad
     }
 
     static generarId(){

@@ -7,7 +7,12 @@ import { horaAMinutos, fechaDesdeDisponibilidad } from "./fecha";
 
 export class Agenda{
 
-    generarTurnosPara(especialidad, medico){     
+    generarTurnosPara(especialidad, medico){   
+        
+        if(!medico.especialidades.includes(especialidad)){
+            throw new Error("El médico no realiza esta especialidad");
+        }
+        
         const turnos = [] 
 
         medico.disponibilidades.forEach(disponibilidad =>{
@@ -28,7 +33,9 @@ export class Agenda{
                     const turno = new Turno(
                         medico,
                         fecha,
-                        EstadoTurno.DISPONIBLE
+                        sede,
+                        EstadoTurno.DISPONIBLE,
+                        especialidad.costoConsulta
                     )
 
                     turnos.push(turno)
