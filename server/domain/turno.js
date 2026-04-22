@@ -9,8 +9,8 @@ import { FactoryNotificacion } from "./factoryNotificacion";
 export class Turno {
     static numeroTurno = 0
 
-    constructor(id, medico, fechaHora, sede, estado) {
-        this.id = id
+    constructor(medico, fechaHora, sede, estado) {
+        this.id = Turno.generarId()
         this.medico = medico, 
         this.fechaHora = fechaHora,
         this.sede = sede, 
