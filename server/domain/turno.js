@@ -9,19 +9,20 @@ import { FactoryNotificacion } from "./factoryNotificacion";
 export class Turno {
     static numeroTurno = 0
 
-    constructor(id, medico, fechaHora, sede, estado) {
-        this.id = id
+    constructor(medico, fechaHora, sede, estado, costo) {
+        this.id = Turno.generarId()
         this.medico = medico, 
         this.fechaHora = fechaHora,
         this.sede = sede, 
         this.estado = estado,
-        this.historialEstados = []
+        this.historialEstados = [],
+        costo = costo
     }
 
     actualizarEstado(nuevoEstado, quien, motivo){
         this.estado = nuevoEstado 
         
-        cambioEstado = CambioEstadoTurno(Date.prototype.getDay()
+        cambioEstado = CambioEstadoTurno(new Date()
         , nuevoEstado
         , this
         , quien
@@ -40,19 +41,24 @@ export class Turno {
         this.practica = practica
     }
 
+    asignarEspecialidad(especialidad){
+        this.especialidad = especialidad
+    }
+
     static generarId(){
-        numeroTurno = this.numeroTurno + 1
+        this.numeroTurno = this.numeroTurno + 1
         return this.numeroTurno
     }
     
     remitenteUltimoCambioEstado(){
-        ultimoCambioDeEstado = this.ultimoEstado()
+        indiceUltimoCambio = this.historialEstados.length - 1
+        ultimoCambioDeEstado = this.historialEstados[indiceUltimoCambio]
         return ultimoCambioDeEstado.usuario
     }
 
     destinatarioUltimoCambioEstado(){
         destinatario = this.paciente
-        if (this.remitente() === this.paciente){
+        if (this.remitenteUltimoCambioEstado() === this.paciente){
             destinatario = this.medico
         }
         return destinatario.usuario

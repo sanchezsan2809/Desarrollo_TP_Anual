@@ -3,35 +3,45 @@ import { Turno } from "./turno";
 import { Practica } from "./practica";
 import { Especialidad } from "./especialidad";
 import { EstadoTurno } from "./estadoTurno";
-import { horaAMinutos } from "./fecha";
+import { horaAMinutos, fechaDesdeDisponibilidad } from "./fecha";
 
 export class Agenda{
 
-    //generarTurnosPara(Oftamologia,medico)
-    //generarTurnoPara(ecografia,medico)
-    generarTurnosPara(especialidad, medico){     
+    generarTurnosPara(entidad, medico){   
+        
+        if(!medico.especialidades.includes(especialidad)){
+            throw new Error("El médico no realiza esta especialidad");
+        }
+        
         const turnos = [] 
 
         medico.disponibilidades.forEach(disponibilidad =>{
             
-            let horaDesde = horaAMinutos(disponibilidad.horaDesde)
-            const horaHasta = horaAMinutos(disponibilidad.horaHasta)
+            let inicio = horaAMinutos(disponibilidad.horaDesde)
+            const fin = horaAMinutos(disponibilidad.horaHasta)
 
             const duracion = especialidad.duracionTurnoEnMins
 
-            while(horaDesde + duracion <= horaHasta){
+            while(inicio + duracion <= fin){
+
+                const fecha = fechaDesdeDisponibilidad(
+                    disponibilidad.diaSemana,
+                    inicio
+                )
+
                 medico.sedes.forEach(sede => {
                     const turno = new Turno(
-                        Turno.generarId(),
                         medico,
-                        new Date(horaDesde),
+                        fecha,
                         sede,
-                        EstadoTurno[1]
+                        EstadoTurno.DISPONIBLE,
+                        especialidad.costoConsulta
                     )
+
                     turnos.push(turno)
                 })
 
-                horaDesde += duracion
+                inicio += duracion
             }
 
         })
@@ -39,14 +49,15 @@ export class Agenda{
         return turnos
     }
 
+    
     generarTurnosPara(practica, medico){
-        //return turno
+        //return Turno[]
         
     }
 
     refrescarTurnosSegunDisponibilidadDe(medico){
-        //return turno
+        //return Turno[]
     }
-
+    
 
 }

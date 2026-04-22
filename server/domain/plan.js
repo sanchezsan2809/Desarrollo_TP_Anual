@@ -12,9 +12,9 @@ export class Plan{
 
     obtenerCobertura(entidad){
         const cobertura =
-            this.coberturasEspecialidad.find(c => c.especialidad.nombre === entidad.nombre) ||
-            this.coberturasPractica.find(c => c.practica.nombre === entidad.nombre);
+            this.coberturasEspecialidad.find(c => c.especialidad.id === entidad.id) ||
+            this.coberturasPractica.find(c => c.practica.id === entidad.id);
         
-        return cobertura ? cobertura.nivel : 3;
+        return cobertura ? cobertura.nivel : NivelCobertura["NO CUBIERTO"];
     }
 }
