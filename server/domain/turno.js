@@ -21,7 +21,7 @@ export class Turno {
     actualizarEstado(nuevoEstado, quien, motivo){
         this.estado = nuevoEstado 
         
-        cambioEstado = CambioEstadoTurno(Date.prototype.getDay()
+        cambioEstado = CambioEstadoTurno(new Date()
         , nuevoEstado
         , this
         , quien
@@ -41,18 +41,19 @@ export class Turno {
     }
 
     static generarId(){
-        numeroTurno = this.numeroTurno + 1
+        this.numeroTurno = this.numeroTurno + 1
         return this.numeroTurno
     }
     
     remitenteUltimoCambioEstado(){
-        ultimoCambioDeEstado = this.ultimoEstado()
+        indiceUltimoCambio = this.historialEstados.length - 1
+        ultimoCambioDeEstado = this.historialEstados[indiceUltimoCambio]
         return ultimoCambioDeEstado.usuario
     }
 
     destinatarioUltimoCambioEstado(){
         destinatario = this.paciente
-        if (this.remitente() === this.paciente){
+        if (this.remitenteUltimoCambioEstado() === this.paciente){
             destinatario = this.medico
         }
         return destinatario.usuario
