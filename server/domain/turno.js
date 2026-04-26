@@ -85,4 +85,15 @@ export class Turno {
         return diferenciaMs >= unaHoraMs
     }
 
+    obtenerUsuario(idUsuario){
+        let usuario = null
+        if(turno.paciente && turno.paciente.usuario.id === idUsuario){
+            usuario = turno.paciente.usuario
+        } else if(turno.medico && turno.medico.usuario.id === idUsuario){
+            usuario = turno.medico.usuario
+        }
+
+        return usuario
+    }
+
 }

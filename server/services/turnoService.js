@@ -22,59 +22,67 @@ export class TurnoService{
         this.medicoRepository = medicoRepository
     }
 
-    reservar(id, pacienteId){
-        const turno = this.findById(id)
-        const paciente = this.pacienteRepository.findById(pacienteId)
+    async reservar({id, pacienteId}){
+        const turno = await this.findById(id)
+        const paciente = await this.pacienteRepository.findById(pacienteId)
         
         const turnoModificado = turno.asignarPaciente(paciente)
 
         return this.turnoRepository.save(turnoModificado)
     }
 
-    cancelar(id, motivo, idUsuario){
-        const turno = this.findById(id)
+    async cancelar({id, motivo, idUsuario}){
+        const turno = await this.findById(id)
         let usuario = null
 
-        if(turno.paciente && turno.paciente.usuario.id === idUsuario){
-            usuario = turno.paciente.usuario
-        } else if(turno.medico && turno.medico.usuario.id === idUsuario){
-            usuario = turno.medico.usuario
-        }
+        usuario = turno.obtenerUsuario(idUsuario)
 
         if(!usuario){
             throw new NotAllowedError("El usuario no puede cancelar este turno")
         }
 
-        const turnoModificado = turno.actualizarEstado(EstadoTurno.CANCELADO, usuario, motivo)
+        const turnoModificado = turno.actualizarEstado(
+            EstadoTurno.CANCELADO, 
+            usuario, 
+            motivo)
 
         return this.turnoRepository.save(turnoModificado)
     }
 
-    findById(id){
-        const turno = this.turnoRepository.findById(id)
+    obtenerHistorial({ pacienteId, estado, fechaDesde, fechaHasta}){
+        return this.turnoRepository.findAll({
+            pacienteId,
+            estado,
+            fechaDesde,
+            fechaHasta
+        })
+    }
+
+    async findById(id){
+        const turno = await this.turnoRepository.findById(id)
 
         if(!turno){
-            throw new TurnoNotFoundError()
+            throw new TurnoNotFoundError("Turno no encontrado")
         }
 
         return turno
     }
 
-    obtenerPacientePorId(id){
-        const paciente = this.pacienteRepository.findById(id)
+    async obtenerPacientePorId(id){
+        const paciente = await this.pacienteRepository.findById(id)
 
         if(!paciente){
-            throw new PacienteNotFoundError()
+            throw new PacienteNotFoundError("Paciente no encontrado")
         }
 
         return paciente
     }
 
-    obtenerMedicoPorId(id){
-        const medico = this.medicoRepository.findById(id)
+    async obtenerMedicoPorId(id){
+        const medico = await this.medicoRepository.findById(id)
 
         if(!medico){
-            throw new MedicoNotFoundError()
+            throw new MedicoNotFoundError("Medico no encontrado")
         }
 
         return medico

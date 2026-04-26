@@ -1,5 +1,6 @@
 import { TurnoService } from "../services/turnoService.js"
 
+
 export class TurnoController {
     constructor({ turnoService }){
         this.turnoService = turnoService
@@ -11,7 +12,7 @@ export class TurnoController {
             const { id } = req.params
             const{ pacienteId } = req.body
 
-            await this.turnoService.reservar(id, pacienteId)
+            await this.turnoService.reservar({id, pacienteId})
 
             res.sendStatus(200)
         } catch (error) {
@@ -24,7 +25,9 @@ export class TurnoController {
             const { id } = req.params
             const { motivo, idUsuario } = req.body
 
-            await this.turnoService.cancelar(id, motivo, idUsuario)
+            await this.turnoService.cancelar({id, 
+                motivo, 
+                idUsuario})
 
             res.sendStatus(200)
         } catch (error) {
@@ -33,6 +36,19 @@ export class TurnoController {
     }
 
     obtenerHistorialTurnos = async(req, res) =>{
+        const { pacienteId, estado, fechaDesde, fechaHasta } = req.query
         
+        try {
+            const turnos = await this.turnoService.obtenerHistorial({
+                pacienteId, 
+                estado,
+                fechaDesde,
+                fechaHasta
+            })
+
+            res.json(turnos)
+        } catch (error) {
+            res.status(500).json({error: error.message})
+        }
     }
 }

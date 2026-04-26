@@ -7,15 +7,15 @@ import {
 
 
 export class TurnoRepository{
-    save(turno){
+    async save(turno){
         throw new Error("Not implemented")
     }
 
-    findById(id){
+    async findById(id){
         throw new Error("Not implemented")
     }
 
-    findall(){
+    async findall({pacienteId, medicoId, estado, fechaDesde, fechaHasta} = {}){
         throw new Error("Not implemented")
     }
 }
@@ -27,7 +27,7 @@ export class TurnoRepositoryMock extends TurnoRepository{
         this.nextId = 1
     }
 
-    save(turno){
+    async save(turno){
         if(!turno.id){
             turno.id = this.nextId++
             this.turnos.push(turno)
@@ -39,11 +39,19 @@ export class TurnoRepositoryMock extends TurnoRepository{
         return turno
     }
 
-    findById(id){
+    async findById(id){
         return this.turnos.find(t => t.id === id)
     }
 
-    findall(){
-        return this.turnos
+    async findall({ pacienteId, medicoId, estado, fechaDesde, fechaHasta}){
+        return this.turnos.filter(turno => {
+        if (filtros.pacienteId && turno.paciente?.usuario?.id !== filtros.pacienteId) return false;
+        if (filtros.medicoId && turno.medico?.usuario?.id !== filtros.medicoId) return false;
+        if (filtros.estado && turno.estado !== filtros.estado) return false;
+        if (filtros.fechaDesde && turno.fechaHora < filtros.fechaDesde) return false;
+        if (filtros.fechaHasta && turno.fechaHora > filtros.fechaHasta) return false;
+
+        return true;
+        })
     }
 }
