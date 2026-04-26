@@ -25,3 +25,12 @@ export const obtenerHistorialTurnosSchema = z.object({
     fechaDesde: z.iso.datetime().optional().transform((val) => val ? new Date(val): undefined),
     fechaHasta: z.iso.datetime().optional().transform((val) => val ? new Date(val): undefined)
 })
+
+export const marcarComoRealizadoSchema = z.object({
+    params: z.object({
+        id: z.string().uuid()
+    }),
+    body: z.object({
+        idUsuario: z.string().uuid()
+    })
+})

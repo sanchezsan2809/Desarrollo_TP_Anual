@@ -1,4 +1,4 @@
-import { Turno } from "../domain/paciente.js";
+import { Turno } from "../domain/turno.js";
 import {
     BadRequestError,
     TurnoNotFoundError,

@@ -24,7 +24,8 @@ export class TurnoService{
 
     async reservar({id, pacienteId}){
         const turno = await this.findById(id)
-        const paciente = await this.pacienteRepository.findById(pacienteId)
+        const paciente = await this.obtenerPacientePorId(pacienteId)
+        
         
         const turnoModificado = turno.asignarPaciente(paciente)
 
@@ -49,13 +50,30 @@ export class TurnoService{
         return this.turnoRepository.save(turnoModificado)
     }
 
-    obtenerHistorial({ pacienteId, estado, fechaDesde, fechaHasta}){
+    async obtenerHistorial({ pacienteId, estado, fechaDesde, fechaHasta}){
         return this.turnoRepository.findAll({
             pacienteId,
             estado,
             fechaDesde,
             fechaHasta
         })
+    }
+
+    async marcarComoRealizado({id, idUsuario}){
+        const turno = await this.turnoRepository.findById(id)
+        let usuario = turno.obtenerUsuarioMedico()
+
+
+        if(!usuario.id === idUsuario){
+            throw new NotAllowedError("El usuario no puede marcar como realizado este turno")
+        }
+
+        const turnoModificado = turno.actualizarEstado(
+            EstadoTurno.REALIZADO, 
+            usuario, 
+            "Turno realizado")
+
+        return this.turnoRepository.save(turnoModificado)
     }
 
     async findById(id){
@@ -79,6 +97,8 @@ export class TurnoService{
     }
 
     async obtenerMedicoPorId(id){
+
+        
         const medico = await this.medicoRepository.findById(id)
 
         if(!medico){

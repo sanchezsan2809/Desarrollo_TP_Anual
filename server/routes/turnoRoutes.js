@@ -5,9 +5,9 @@ import { validate, validateQuery } from '../middlewares/validate.js'
 import { 
     reservarTurnoSchema,
     cancelarTurnoRequestSchema,
-    obtenerHistorialTurnosSchema
+    obtenerHistorialTurnosSchema,
+    marcarComoRealizadoSchema
  } from '../schemas/turnoSchemas.js'
-
 
 
  const router = Router()
@@ -30,6 +30,12 @@ router.post(
     "/:id/cancelar",
     validate(cancelarTurnoRequestSchema),
     controller.cancelar()
+)
+
+router.patch(
+    "/:id/realizado",
+    validate(marcarComoRealizadoSchema),
+    controller.marcarComoRealizado()
 )
 
 

@@ -22,4 +22,8 @@ export class Medico{
         this.disponibilidades.push(disponibilidad);
     }
 
+    puedePracticar(servicio){
+        return this.especialidades.includes(servicio) || this.practicas.includes(servicio)
+    }
+
 }

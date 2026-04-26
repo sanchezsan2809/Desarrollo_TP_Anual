@@ -1,8 +1,9 @@
+import { response } from "express"
 import { TurnoService } from "../services/turnoService.js"
 
 
 export class TurnoController {
-    constructor({ turnoService }){
+    constructor( turnoService  =  new TurnoService()){
         this.turnoService = turnoService
     }
 
@@ -49,6 +50,17 @@ export class TurnoController {
             })
 
             res.json(turnos)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    marcarComoRealizado = async(req, res, next) =>{
+        try {
+            const { id } = req.params
+            const { idUsuario } = req.query
+
+            await this.turnoService.marcarComoRealizado({id, idUsuario})
         } catch (error) {
             next(error)
         }
