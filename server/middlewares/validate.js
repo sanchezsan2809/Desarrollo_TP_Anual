@@ -17,3 +17,12 @@ export const validate = (schema) => (req, res, next) =>{
         })
     }
 }
+
+export const validateQuery = (schema) => (req, res, next) =>{
+    try{
+        req.query = schema.parse(req.query)
+        next()
+    }catch(error){
+        return res.status(400).json({error: error.errors})
+    }
+}

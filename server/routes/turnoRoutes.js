@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import { TurnoController } from '../controllers/turnoController.js'
 import { TurnoService } from "../services/turnoService.js"
-import { validate } from '../middlewares/validate.js'
+import { validate, validateQuery } from '../middlewares/validate.js'
 import { 
     reservarTurnoSchema,
-    cancelarTurnoRequestSchema
+    cancelarTurnoRequestSchema,
+    obtenerHistorialTurnosSchema
  } from '../schemas/turnoSchemas.js'
 
 
@@ -19,10 +20,18 @@ router.post(
     controller.reservar()
 )
 
+router.get(
+    "/",
+    validateQuery(obtenerHistorialTurnosSchema),
+    controller.obtenerHistorialTurnos()
+)
+
 router.post(
     "/:id/cancelar",
     validate(cancelarTurnoRequestSchema),
     controller.cancelar()
 )
+
+
 
 export default router

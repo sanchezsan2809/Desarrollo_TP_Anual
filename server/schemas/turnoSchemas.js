@@ -18,3 +18,7 @@ export const cancelarTurnoRequestSchema = z.object({
         idUsuario: z.string().uuid()
     })
 })
+
+export const obtenerHistorialTurnosSchema = z.object({
+    pacienteId: z.string().uuid(),
+})

@@ -23,16 +23,16 @@ export class TurnoService{
     }
 
     reservar(id, pacienteId){
-        const turno = this.obtenerTurnoPorId(id)
-        const paciente = this.pacienteRepository.obtenerPorId(pacienteId)
+        const turno = this.findById(id)
+        const paciente = this.pacienteRepository.findById(pacienteId)
         
         const turnoModificado = turno.asignarPaciente(paciente)
 
-        return this.turnoRepository.guardar(turnoModificado)
+        return this.turnoRepository.save(turnoModificado)
     }
 
     cancelar(id, motivo, idUsuario){
-        const turno = this.obtenerTurnoPorId(id)
+        const turno = this.findById(id)
         let usuario = null
 
         if(turno.paciente && turno.paciente.usuario.id === idUsuario){
@@ -47,11 +47,11 @@ export class TurnoService{
 
         const turnoModificado = turno.actualizarEstado(EstadoTurno.CANCELADO, usuario, motivo)
 
-        return this.turnoRepository.guardar(turnoModificado)
+        return this.turnoRepository.save(turnoModificado)
     }
 
-    obtenerTurnoPorId(id){
-        const turno = this.turnoRepository.obtenerPorId(id)
+    findById(id){
+        const turno = this.turnoRepository.findById(id)
 
         if(!turno){
             throw new TurnoNotFoundError()
@@ -61,7 +61,7 @@ export class TurnoService{
     }
 
     obtenerPacientePorId(id){
-        const paciente = this.pacienteRepository.obtenerPorId(id)
+        const paciente = this.pacienteRepository.findById(id)
 
         if(!paciente){
             throw new PacienteNotFoundError()
@@ -71,7 +71,7 @@ export class TurnoService{
     }
 
     obtenerMedicoPorId(id){
-        const medico = this.medicoRepository.obtenerPorId(id)
+        const medico = this.medicoRepository.findById(id)
 
         if(!medico){
             throw new MedicoNotFoundError()

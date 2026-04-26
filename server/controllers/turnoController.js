@@ -31,4 +31,8 @@ export class TurnoController {
             res.status(500).json({error: error.message})
         }
     }
+
+    obtenerHistorialTurnos = async(req, res) =>{
+        
+    }
 }
