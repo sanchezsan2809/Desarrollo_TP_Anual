@@ -20,6 +20,10 @@ export class Turno {
     }
 
     actualizarEstado(nuevoEstado, quien, motivo){
+        if(nuevoEstado === EstadoTurno.CANCELADO && !this.puedeCancelarse()){
+            throw new Error("No se puede cancelar el turno")
+        }
+
         this.estado = nuevoEstado 
         
         cambioEstado = CambioEstadoTurno(new Date()
@@ -62,6 +66,23 @@ export class Turno {
             destinatario = this.medico
         }
         return destinatario.usuario
+    }
+
+    puedeCancelarse(){
+        if(
+            this.estado === EstadoTurno.CANCELADO ||
+            this.estado === EstadoTurno.REALIZADO
+        ){
+            return false
+        }
+
+        const ahora = new Date()
+        const fechaTurno = new Date(this.fecha)
+
+        const diferenciaMs = fechaTurno - ahora
+        const unaHoraMs = 60 * 60 * 1000
+
+        return diferenciaMs >= unaHoraMs
     }
 
 }

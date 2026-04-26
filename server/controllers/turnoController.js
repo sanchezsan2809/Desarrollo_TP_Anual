@@ -1,5 +1,4 @@
 import { TurnoService } from "../services/turnoService.js"
-import { validate } from "../middlewares/validate.js"
 
 export class TurnoController {
     constructor({ turnoService }){
@@ -23,9 +22,9 @@ export class TurnoController {
     cancelarTurno = async(req, res) =>{
         try {
             const { id } = req.params
-            const { motivo } = req.body
+            const { motivo, idUsuario } = req.body
 
-            await this.turnoService.cancelar(id, motivo)
+            await this.turnoService.cancelar(id, motivo, idUsuario)
 
             res.sendStatus(200)
         } catch (error) {

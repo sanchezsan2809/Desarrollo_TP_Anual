@@ -14,6 +14,7 @@ export const cancelarTurnoRequestSchema = z.object({
         id: z.string().uuid()
     }), 
     body: z.object({
-        motivo: z.string.min(5)
+        motivo: z.string.min(5),
+        idUsuario: z.string().uuid()
     })
 })
