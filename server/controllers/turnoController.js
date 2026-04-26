@@ -7,35 +7,37 @@ export class TurnoController {
     }
 
     //  Paciente
-    reservar = async(req, res) =>{
+    reservar = async(req, res, next) =>{
         try {
             const { id } = req.params
             const{ pacienteId } = req.body
 
-            await this.turnoService.reservar({id, pacienteId})
+            const turno = await this.turnoService.reservar({id, pacienteId})
 
-            res.sendStatus(200)
+            res.status(200).json(turno)
         } catch (error) {
-            res.status(500).json({error: error.message})
+            next(error)
         }
     }
 
-    cancelarTurno = async(req, res) =>{
+    cancelarTurno = async(req, res, next) =>{
         try {
             const { id } = req.params
-            const { motivo, idUsuario } = req.body
+            const { motivo } = req.body
+            const { idUsuario } = req.query
 
-            await this.turnoService.cancelar({id, 
+            await this.turnoService.cancelar({
+                id, 
                 motivo, 
                 idUsuario})
 
-            res.sendStatus(200)
+            res.sendStatus(204)
         } catch (error) {
-            res.status(500).json({error: error.message})
+            next(error)
         }
     }
 
-    obtenerHistorialTurnos = async(req, res) =>{
+    obtenerHistorialTurnos = async(req, res, next) =>{
         const { pacienteId, estado, fechaDesde, fechaHasta } = req.query
         
         try {
@@ -48,7 +50,7 @@ export class TurnoController {
 
             res.json(turnos)
         } catch (error) {
-            res.status(500).json({error: error.message})
+            next(error)
         }
     }
 }
