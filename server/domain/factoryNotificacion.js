@@ -35,7 +35,7 @@ export class FactoryNotificacion {
 
     }
     
-    crearSegunEstadoTurno(turno) {   
+    static crearSegunEstadoTurno(turno) {   
         const estrategia = this.estrategias[turno.estado];
         if(!estrategia){
             throw new Error("No hay cambios en el turno para notificar");
@@ -45,7 +45,7 @@ export class FactoryNotificacion {
     }
     
     
-    crearRecordatorio(turno) {
+    static crearRecordatorio(turno) {
         const mensajeBase = `Recordatorio: Mañana tiene un turno agendado a las ${turno.fechaHora.toLocaleTimeString()}`;
 
         return [

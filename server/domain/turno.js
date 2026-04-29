@@ -16,13 +16,13 @@ export class Turno {
         this.sede = sede, 
         this.estado = estado,
         this.historialEstados = [],
-        costo = costo
+        this.costo = costo
     }
 
     actualizarEstado(nuevoEstado, quien, motivo){
         this.estado = nuevoEstado 
         
-        cambioEstado = CambioEstadoTurno(new Date()
+        const cambioEstado = new CambioEstadoTurno(new Date()
         , nuevoEstado
         , this
         , quien
@@ -45,7 +45,7 @@ export class Turno {
         this.especialidad = especialidad
     }
 
-    static generarId(){
+    static generarId(){ //método de clase (usa una variable a la que pueden acceder todas las instancias)
         this.numeroTurno = this.numeroTurno + 1
         return this.numeroTurno
     }
