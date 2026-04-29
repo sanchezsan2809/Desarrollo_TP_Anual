@@ -16,7 +16,7 @@ export class Turno {
         this.sede = sede, 
         this.estado = estado,
         this.historialEstados = [],
-        costo = costo
+        this.costo = costo
     }
 
     actualizarEstado(nuevoEstado, quien, motivo){
@@ -26,7 +26,7 @@ export class Turno {
 
         this.estado = nuevoEstado 
         
-        cambioEstado = CambioEstadoTurno(new Date()
+        const cambioEstado = new CambioEstadoTurno(new Date()
         , nuevoEstado
         , this
         , quien
