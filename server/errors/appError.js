@@ -1,22 +1,41 @@
 export class AppError extends Error{
     constructor(message){
-        super(message)
+        super(message, statusCode)
+        this.name = this.constructor.name
+        this.statusCode = this.statusCode,
+        this.status = this.statusCode >= 500? "error": "fail",
         this.timestamp = new Date().toISOString()
     }
 }
 
-export class BadRequestError extends AppError{}
+export class BadRequestError extends AppError{
+    constructor(message){super(message, 400)}
+}
 
-export class NotFoundError extends AppError{}
+export class NotFoundError extends AppError{
+    constructor(message){super(message, 404)}
+}
 
-export class TurnoNotFoundError extends NotFoundError{}
+export class TurnoNotFoundError extends NotFoundError{
+    constructor(message){super(message, 404)}
+}
 
-export class PacienteNotFoundError extends NotFoundError{}
+export class PacienteNotFoundError extends NotFoundError{
+    constructor(message){super(message, 404)}
+}
 
-export class MedicoNotFoundError extends NotFoundError{}
+export class MedicoNotFoundError extends NotFoundError{
+    constructor(message){super(message, 404)}
+}
 
-export class ConflictError extends AppError{}
+export class ConflictError extends AppError{
+    constructor(message){super(message, 409)}
+}
 
-export class NotAllowedError extends AppError{}
+export class NotAllowedError extends AppError{
+    constructor(message){super(message, 405)}
+}
 
-export class UnprocessableEntityError extends AppError{}
+export class UnprocessableEntityError extends AppError{
+    constructor(message){super(message, 422)}
+}
