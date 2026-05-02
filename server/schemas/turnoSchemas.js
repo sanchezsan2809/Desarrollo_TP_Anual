@@ -20,10 +20,20 @@ export const cancelarTurnoRequestSchema = z.object({
 })
 
 export const obtenerHistorialTurnosSchema = z.object({
-    pacienteId: z.string().uuid(),
-    estado: z.enum(["RESERVADO", "CONFIRMADO", "CANCELADO", "REALIZADO"]),
-    fechaDesde: z.iso.datetime().optional().transform((val) => val ? new Date(val): undefined),
-    fechaHasta: z.iso.datetime().optional().transform((val) => val ? new Date(val): undefined)
+    pacienteId: z.string().uuid().optional(),
+
+    estado: z.enum(["RESERVADO", "CONFIRMADO", "CANCELADO", "REALIZADO"]).optional(),
+    
+    fechaDesde: z.iso.datetime().optional()
+        .transform((val) => val ? new Date(val): undefined),
+    
+    fechaHasta: z.string().datetime().optional()
+        .transform((val) => val ? new Date(val): undefined),
+
+    page: z.coerce.number().int().min(1).default(1),
+
+    limit: z.coerce.number().int().min(1).max(100).default(10)
+
 })
 
 export const marcarComoRealizadoSchema = z.object({

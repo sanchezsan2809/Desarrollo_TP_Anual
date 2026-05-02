@@ -1,3 +1,6 @@
+import z from "zod"
+import { BadRequestError } from "../errors/appError"
+
 export const validate = (schema) => (req, res, next) =>{
     try{
         const result = schema.parse({
@@ -12,17 +15,8 @@ export const validate = (schema) => (req, res, next) =>{
 
         next()
     }catch(error){
-        return req.status(400).json({
-            error: error.errors
-        })
+        next(new BadRequestError("Request mal formada"))
     }
 }
 
-export const validateQuery = (schema) => (req, res, next) =>{
-    try{
-        req.query = schema.parse(req.query)
-        next()
-    }catch(error){
-        return res.status(400).json({error: error.errors})
-    }
-}
+export const validateQuery = (schema) => validate(z.object({ query: schema }))

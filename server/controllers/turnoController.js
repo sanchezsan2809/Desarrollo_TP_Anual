@@ -1,9 +1,11 @@
 import { response } from "express"
 import { TurnoService } from "../services/turnoService.js"
+import { BadRequestError } from "../errors/appError.js"
+import { validateQuery } from "../middlewares/validate.js"
 
 
 export class TurnoController {
-    constructor( turnoService  =  new TurnoService()){
+    constructor({ turnoService  =  new TurnoService() } = {}){
         this.turnoService = turnoService
     }
 
@@ -39,15 +41,26 @@ export class TurnoController {
     }
 
     obtenerHistorialTurnos = async(req, res, next) =>{
-        const { pacienteId, estado, fechaDesde, fechaHasta } = req.query
-        
         try {
-            const turnos = await this.turnoService.obtenerHistorial({
+            const { pacienteId, 
+                estado, 
+                fechaDesde, 
+                fechaHasta,
+                page,
+                limit } = req.query
+
+            const turnos = await this.turnoService.obtenerHistorial({ 
+            filtros:{
                 pacienteId, 
                 estado,
                 fechaDesde,
                 fechaHasta
-            })
+            },
+            paginacion:{
+                page,
+                limit
+            }
+        })
 
             res.json(turnos)
         } catch (error) {
@@ -63,6 +76,24 @@ export class TurnoController {
             await this.turnoService.marcarComoRealizado({id, idUsuario})
         } catch (error) {
             next(error)
+        }
+    }
+
+    
+
+    extraerPaginacion(query){
+        const numPag = query?.page === undefined ? 1 : Number(query.page)
+        const limPag = query?.limit === undefined ? 10 : Number(query.limit)
+        
+        this.validarEnteroPositivo(numPag, "page")
+        this.validarEnteroPositivo(limPag, "limit")
+
+        return { numPag, limPag }
+    }
+
+    validarEnteroPositivo(numero, parametro){
+        if(!Number.isInteger(numero) || numero <= 0){
+            throw new BadRequestError(`El parámetro ${parametro} debe ser un entero positivo`)
         }
     }
 }

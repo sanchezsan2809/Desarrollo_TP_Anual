@@ -16,7 +16,9 @@ import {
 } from "../errors/appError.js";
 
 export class TurnoService{
-    constructor({ turnoRepository, pacienteRepository, medicoRepository }){
+    constructor({ turnoRepository = new TurnoRepository(), 
+        pacienteRepository = new pacienteRepository(), 
+        medicoRepository = new MedicoRepository() } = {}){
         this.turnoRepository = turnoRepository
         this.pacienteRepository = pacienteRepository
         this.medicoRepository = medicoRepository
@@ -50,13 +52,24 @@ export class TurnoService{
         return this.turnoRepository.save(turnoModificado)
     }
 
-    async obtenerHistorial({ pacienteId, estado, fechaDesde, fechaHasta}){
-        return this.turnoRepository.findAll({
-            pacienteId,
-            estado,
-            fechaDesde,
-            fechaHasta
+    async obtenerHistorial({ filtros, paginacion}){
+        
+        const { data, total } = await this.turnoRepository.findall({
+            filtros, 
+            paginacion
         })
+
+        const { page, limit } = paginacion
+
+        const totalPages = Math.ceil(total / limit)
+
+        return {
+            data, 
+            page,
+            totalPages, 
+            total
+        }
+
     }
 
     async marcarComoRealizado({id, idUsuario}){
@@ -97,8 +110,6 @@ export class TurnoService{
     }
 
     async obtenerMedicoPorId(id){
-
-        
         const medico = await this.medicoRepository.findById(id)
 
         if(!medico){

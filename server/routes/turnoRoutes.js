@@ -17,25 +17,25 @@ import {
 router.post(
     "/:id/reservar",
     validate(reservarTurnoSchema),
-    controller.reservar()
+    controller.reservar
 )
 
 router.get(
     "/",
     validateQuery(obtenerHistorialTurnosSchema),
-    controller.obtenerHistorialTurnos()
+    controller.obtenerHistorialTurnos
 )
 
 router.post(
     "/:id/cancelar",
     validate(cancelarTurnoRequestSchema),
-    controller.cancelar()
+    controller.cancelar
 )
 
 router.patch(
     "/:id/realizado",
     validate(marcarComoRealizadoSchema),
-    controller.marcarComoRealizado()
+    controller.marcarComoRealizado
 )
 
 

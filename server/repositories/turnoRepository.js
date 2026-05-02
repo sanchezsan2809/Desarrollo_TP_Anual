@@ -15,7 +15,7 @@ export class TurnoRepository{
         throw new Error("Not implemented")
     }
 
-    async findall({pacienteId, medicoId, estado, fechaDesde, fechaHasta} = {}){
+    async findall({ filtros, paginacion } = {}){
         throw new Error("Not implemented")
     }
 }
@@ -43,15 +43,35 @@ export class TurnoRepositoryMock extends TurnoRepository{
         return this.turnos.find(t => t.id === id)
     }
 
-    async findall({ pacienteId, medicoId, estado, fechaDesde, fechaHasta}){
-        return this.turnos.filter(turno => {
-        if (filtros.pacienteId && turno.paciente?.usuario?.id !== filtros.pacienteId) return false;
-        if (filtros.medicoId && turno.medico?.usuario?.id !== filtros.medicoId) return false;
-        if (filtros.estado && turno.estado !== filtros.estado) return false;
-        if (filtros.fechaDesde && turno.fechaHora < filtros.fechaDesde) return false;
-        if (filtros.fechaHasta && turno.fechaHora > filtros.fechaHasta) return false;
+    async findall({ filtros, paginacion }){
+        let resultado = [...this.turnos]
 
-        return true;
-        })
+        if(filtros.pacienteId){
+            resultado = resultado.filter(t => t.pacienteId === filtros.pacienteId)
+        }
+
+        if(filtros.estado){
+            resultado = resultado.filter(t => t.estado === filtros.estado)
+        }
+
+        if(filtros.fechaDesde){
+            resultado = resultado.filter(t => t.fecha >= filtros.fechaDesde)
+        }
+
+        if(filtros.fechaHasta){
+            resultado = resultado.filter(t => t.fecha <= filtros.fechaHasta)
+        }
+       
+        const total = resultado.length
+
+        const { page, limit } = paginacion
+        const offset = (page - 1) * limit
+
+        const data = resultado.slice(offset, offset + limit)
+
+        return{
+            data, 
+            total
+        }
     }
 }
